@@ -5,6 +5,9 @@ on: [push]
 jobs:
   tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']
 
     steps:
       - name: Checkoout du code
@@ -13,10 +16,14 @@ jobs:
       - name: Istallation de Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python-version}}
 
       - name: Exécution du script Python
         run: python main.py
 
       - name: Istallations des dépendances
         run: pip install fastapi locust pytest uvicorn coverage httpx pytest-mock pytest-profiling pylint sqlalchemy pydantic
+
+      - name: Exécution des tests
+        run: 
+          pytest
