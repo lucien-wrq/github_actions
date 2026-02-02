@@ -17,3 +17,6 @@ jobs:
 
       - name: Exécution du script Python
         run: python main.py
+
+      - name: Istallations des dépendances
+        run: pip install fastapi locust pytest uvicorn coverage httpx pytest-mock pytest-profiling pylint sqlalchemy pydantic
