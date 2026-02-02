@@ -1,29 +1,31 @@
 name: Build and Execute Python Script
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10']
+       matrix:
+         python-version: ['3.11','3.10']
 
     steps:
-      - name: Checkoout du code
+      - name: Checkout du code
         uses: actions/checkout@v4
 
-      - name: Istallation de Python
+      - name: Installation de Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version}}
+          python-version: ${{ matrix.python-version }}
 
-      - name: Exécution du script Python
-        run: python main.py
-
-      - name: Istallations des dépendances
+      - name: Installation des dépendances
         run: pip install fastapi locust pytest uvicorn coverage httpx pytest-mock pytest-profiling pylint sqlalchemy pydantic
 
-      - name: Exécution des tests
-        run: 
-          pytest
+      - name: Execution des tests
+        run: coverage run -m pytest; coverage xml
+      
+      - name: Get Coverage - change
+        uses: orgoro/coverage@v3.1
+        with:
+            coverageFile: coverage.xml
+            token: ${{secrets.EPSI_TOKEN}}
